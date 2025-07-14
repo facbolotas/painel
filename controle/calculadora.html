@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Calculadora de Lucro - Facção</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white min-h-screen flex items-center justify-center px-4">
+  <div class="w-full max-w-2xl bg-gray-800 rounded-2xl shadow-xl p-6 space-y-6">
+    <h1 class="text-2xl font-bold text-center text-red-400">Calculadora de Lucro - Facção GTA RP</h1>
+
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <label class="block mb-1">Quantidade de Caixas:</label>
+        <input type="number" id="caixasInput" value="20" class="w-full p-2 rounded bg-gray-700 text-white">
+      </div>
+      <div>
+        <label class="block mb-1">Valor de Venda por Caixa (R$):</label>
+        <input type="number" id="precoCaixa" value="5000" class="w-full p-2 rounded bg-gray-700 text-white">
+      </div>
+      <div>
+        <label class="block mb-1">Comissão (%) por Caixa:</label>
+        <input type="number" id="comissao" value="20" class="w-full p-2 rounded bg-gray-700 text-white">
+      </div>
+      <div>
+        <label class="block mb-1">Pagamento Fixo pela Meta (R$):</label>
+        <input type="number" id="pagamentoFixo" value="15000" class="w-full p-2 rounded bg-gray-700 text-white">
+      </div>
+    </div>
+
+    <button onclick="calcularLucro()" class="w-full mt-4 bg-red-500 hover:bg-red-600 text-white py-2 rounded-xl font-bold transition duration-300">
+      Calcular Lucro
+    </button>
+
+    <div id="resultado" class="mt-6 space-y-2 text-sm bg-gray-700 p-4 rounded-xl hidden">
+      <p><strong>🔢 Farm Necessário:</strong> <span id="farm"></span> unidades</p>
+      <p><strong>📦 Caixas Produzidas:</strong> <span id="caixas"></span></p>
+      <p><strong>💰 Receita Total:</strong> R$ <span id="receita"></span></p>
+      <p><strong>🧪 Custo com Ziplocks:</strong> R$ <span id="custoZiplock"></span></p>
+      <p><strong>🎯 COMISSÃO TOTAL:</strong> R$ <span id="totalComissao"></span></p>
+      <p><strong>👷 Pagamento Fixo ao Membro:</strong> R$ <span id="pagFixo"></span></p>
+      <p><strong>📈 LUCRO DA FACÇÃO:</strong> R$ <span id="lucro"></span></p>
+      <p><strong>📊 Margem de Lucro:</strong> <span id="margem"></span>%</p>
+    </div>
+
+    <button onclick="window.location.href='http://banco.marcone.store/controle/controle.html'" class="w-full mt-2 bg-gray-600 hover:bg-gray-500 text-white py-2 rounded-xl font-semibold transition duration-300">
+      ← Voltar para o Painel
+    </button>
+  </div>
+
+  <script>
+    function calcularLucro() {
+      const caixas = parseInt(document.getElementById('caixasInput').value);
+      const precoCaixa = parseFloat(document.getElementById('precoCaixa').value);
+      const comissao = parseFloat(document.getElementById('comissao').value);
+      const pagamentoFixo = parseFloat(document.getElementById('pagamentoFixo').value);
+
+      const farm = caixas * 25;
+      const receita = caixas * precoCaixa;
+      const custoZiplock = caixas * 1250;
+      const totalComissao = caixas * (precoCaixa * (comissao / 100));
+      const totalCustos = custoZiplock + totalComissao + pagamentoFixo;
+      const lucro = receita - totalCustos;
+      const margem = ((lucro / receita) * 100).toFixed(2);
+
+      document.getElementById('farm').textContent = farm;
+      document.getElementById('caixas').textContent = caixas;
+      document.getElementById('receita').textContent = receita.toLocaleString();
+      document.getElementById('custoZiplock').textContent = custoZiplock.toLocaleString();
+      document.getElementById('totalComissao').textContent = totalComissao.toLocaleString();
+      document.getElementById('pagFixo').textContent = pagamentoFixo.toLocaleString();
+      document.getElementById('lucro').textContent = lucro.toLocaleString();
+      document.getElementById('margem').textContent = margem;
+
+      document.getElementById('resultado').classList.remove('hidden');
+    }
+  </script>
+</body>
+</html>

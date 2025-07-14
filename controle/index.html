@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bolotas - Controle Financeiro</title>
+    <link rel="icon" href="http://banco.marcone.store/controle/bolotas.ico" type="image/x-icon">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap');
+
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      font-family: 'Raleway', sans-serif;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .background-blur {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('https://i.ibb.co/Y41XSNRX/bolotas.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      filter: blur(4px);
+      z-index: 0;
+    }
+
+    .login-box {
+      background: #1e1e1e;
+      padding: 50px 40px;
+      border-radius: 12px;
+      box-shadow: 0 15px 25px rgba(0,0,0,0.5);
+      width: 380px;
+      text-align: center;
+      color: #fff;
+      position: relative;
+      z-index: 1;
+    }
+
+    .login-box h1 {
+      font-size: 48px;
+      margin-bottom: 10px;
+      color: #ff4c4c;
+      text-shadow: 1px 1px 2px rgba(255, 0, 0, 0.5);
+    }
+
+    .login-box h2 {
+      font-size: 20px;
+      color: #ccc;
+      margin-bottom: 25px;
+    }
+
+    .login-box input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 6px;
+      border: none;
+      background: #333;
+      color: #fff;
+      font-size: 14px;
+    }
+
+    .login-box input::placeholder {
+      color: #aaa;
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 12px;
+      margin-top: 15px;
+      border: none;
+      border-radius: 6px;
+      background: linear-gradient(90deg, #0300C9, #ffffff, #FF0000);
+      color: #242424;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 16px;
+      transition: 0.3s;
+    }
+
+    .login-btn:hover {
+      background: linear-gradient(90deg, rgb(0, 25, 165), #ffffff, #c70000);
+    }
+
+    .checkbox-container {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 8px;
+      margin-top: 10px;
+      font-size: 14px;
+      color: #ffffff;
+    }
+
+    .checkbox-container input[type="checkbox"] {
+      margin: 0;
+      width: 16px;
+      height: 16px;
+    }
+
+    .social-icons {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .social-icon-btn {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      border: none;
+      transition: transform 0.2s ease;
+    }
+
+    .social-icon-btn:hover {
+      transform: scale(1.1);
+    }
+
+    .google { background: #db4437; }
+    .facebook { background: #3b5998; }
+    .twitter { background: #1da1f2; }
+
+    .social-icon-btn svg {
+      width: 24px;
+      height: 24px;
+      fill: white;
+    }
+
+    footer {
+      position: fixed;
+      bottom: 10px;
+      width: 100%;
+      text-align: center;
+      color: #aaa;
+      font-size: 10px;
+      z-index: 1;
+    }
+
+    @media (max-width: 480px) {
+      .login-box {
+        width: 90%;
+        padding: 30px 20px;
+      }
+      .social-icons {
+        right: 10px;
+      }
+      footer {
+        font-size: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="background-blur"></div>
+
+  <div class="login-box">
+<img src="https://i.ibb.co/Ps0zPY0g/bolotas.gif" width="140" height="110" alt="Descrição da imagem" style="border-radius: 12px;">
+
+    <h2>Bolotas - Controle Financeiro</h2>
+
+    <input id="login-nome" type="text" placeholder="Usuário (sem @...)" />
+    <input id="login-senha" type="password" placeholder="Senha" />
+
+    <div class="checkbox-container">
+      <input type="checkbox" id="manter-conectado">
+      <label for="manter-conectado">Manter conectado</label>
+    </div>
+
+    <button class="login-btn" onclick="confirmarLogin()">Entrar</button>
+  </div>
+  <footer>
+    Desenvolvido by GomesCN
+  </footer>
+
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCFx7YYsI0jS2tN3sMtOUMRaNHJSIONX6A",
+      authDomain: "bancofac-2aa1d.firebaseapp.com",
+      databaseURL: "https://bancofac-2aa1d-default-rtdb.firebaseio.com/",
+      projectId: "bancofac-2aa1d"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    function confirmarLogin() {
+      const nome = document.getElementById("login-nome").value.trim();
+      const senha = document.getElementById("login-senha").value.trim();
+      const manterConectado = document.getElementById("manter-conectado").checked;
+
+      const email = `${nome}@bancofac.com`;
+
+      const persistence = manterConectado 
+        ? firebase.auth.Auth.Persistence.LOCAL 
+        : firebase.auth.Auth.Persistence.SESSION;
+
+      firebase.auth().setPersistence(persistence)
+        .then(() => {
+          return firebase.auth().signInWithEmailAndPassword(email, senha);
+        })
+        .then(userCredential => {
+          const uid = userCredential.user.uid;
+          const dataHora = new Date().toISOString();
+
+          firebase.database().ref(`logins/${uid}`).push({
+            email: email,
+            dataHora: dataHora
+          });
+
+          window.location = "controle.html";
+        })
+        .catch(error => {
+          console.error(error);
+          alert("Usuário ou senha inválidos.");
+        });
+    }
+  </script>
+
+</body>
+</html>

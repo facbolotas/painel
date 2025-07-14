@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Relatório de Extrato - BANCO FAC</title>
+  <link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@700&family=Arial&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      background: url('https://i.ibb.co/yFJHFvpN/fundo.jpg') repeat center center;
+      background-color: #f3f4f6;
+      color: #1f2937;
+      padding: 2rem;
+    }
+
+    header {
+      background: linear-gradient(90deg, #fb2424, #f91616);
+      border-bottom: 2px solid #7c1212;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    header h1 {
+      font-family: 'Amatic SC', cursive;
+      font-size: 2rem;
+      color: #fff;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .logo {
+      display: block;
+      margin: 0 auto 1rem;
+      width: 100px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .card {
+      background: #fff;
+      border-bottom-right-radius: 12px;
+      border-bottom-left-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      margin-bottom: 2rem;
+      position: relative;
+      background-image: url('https://www.transparenttextures.com/patterns/checkered-pattern.png');
+      background-blend-mode: overlay;
+      background-color: rgba(255, 255, 255, 0.95);
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: -10px;
+      left: 0;
+      right: 0;
+      height: 10px;
+      background: repeating-linear-gradient(
+        45deg,
+        #fb2424,
+        #fb2424 10px,
+        #DC2626 10px,
+        #DC2626 20px
+      );
+      border-radius: 12px 12px 0 0;
+    }
+
+    .filtros {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .filtros input, .filtros select {
+      padding: 0.5rem;
+      border: 1px solid #7c1212;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      background: #fff;
+    }
+
+    .filtros button {
+      padding: 0.75rem;
+      border: none;
+      border-radius: 8px;
+      background: #DC2626;
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .filtros button:hover {
+      background: #B91C1C;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 0.75rem;
+      border: 1px solid #e5e7eb;
+      text-align: left;
+      font-size: 0.85rem;
+    }
+
+    th {
+      background: linear-gradient(90deg, #f91616, #fd3939);
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .deposito {
+      background-color: rgba(16, 185, 129, 0.1);
+      color: #10b981;
+    }
+
+    .saque {
+      background-color: rgba(239, 68, 68, 0.1);
+      color: #ef4444;
+    }
+  footer {
+    position: fixed;
+    bottom: 10px;
+    width: 100%;
+    text-align: center;
+    color: #fff;
+    font-size: 14px;
+    z-index: 2;
+  }
+
+  @media (max-width: 480px) {
+    footer {
+      font-size: 12px;
+    }
+  }
+
+    .acoes {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .acoes button {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      background: #fb2424;
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .acoes button:hover {
+      background: #D97706;
+    }
+
+    @media (max-width: 768px) {
+      .filtros {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .filtros input, .filtros select, .filtros button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Relatório Bancário - Tropa do CN </h1>
+  </header>
+
+  <div class="container">
+    
+    <div class="card">
+      <div class="filtros">
+        <input type="text" id="filtro-autor" placeholder="Filtrar por responsável" />
+        <select id="filtro-tipo">
+          <option value="">Todos os tipos</option>
+          <option value="Venda">Venda</option>
+          <option value="Depósito">Depósito</option>
+          <option value="Saque">Saque</option>
+        </select>
+        <input type="date" id="filtro-data" />
+        <button onclick="filtrar()">Aplicar Filtros</button>
+      </div>
+
+      <table id="tabela-extrato">
+        <thead>
+          <tr>
+            <th>Data</th>
+            <th>Tipo</th>
+            <th>Valor</th>
+            <th>Descrição</th>
+            <th>Responsável</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- conteúdo será inserido via JavaScript -->
+        </tbody>
+      </table>
+
+      <div class="acoes">
+        <button onclick="window.print()">🖨️ Imprimir</button>
+        <button onclick="exportarCSV()">📥 Exportar CSV</button>
+      </div>
+    </div>
+  </div>
+  <footer>
+    Desenvolvido by Gomes &hearts;
+  </footer>
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+  <script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyCFx7YYsI0jS2tN3sMtOUMRaNHJSIONX6A",
+    authDomain: "bancofac-2aa1d.firebaseapp.com",
+    databaseURL: "https://bancofac-2aa1d-default-rtdb.firebaseio.com/",
+    projectId: "bancofac-2aa1d"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+    let extrato = [];
+
+    function carregarExtrato() {
+      db.ref("controleCaixa/extrato").once("value", snapshot => {
+        extrato = snapshot.val() || [];
+        exibirTabela(extrato);
+      });
+    }
+
+    function exibirTabela(dados) {
+      const tbody = document.querySelector("#tabela-extrato tbody");
+      tbody.innerHTML = "";
+      dados.forEach(item => {
+        const tr = document.createElement("tr");
+        tr.className = item.tipo === "Saque" ? "saque" : "deposito";
+        tr.innerHTML = `
+          <td>${item.data}</td>
+          <td>${item.tipo}</td>
+          <td>${parseFloat(item.valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
+          <td>${item.descricao}</td>
+          <td>${item.autor}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function filtrar() {
+      const autor = document.getElementById("filtro-autor").value.toLowerCase();
+      const tipo = document.getElementById("filtro-tipo").value;
+      const data = document.getElementById("filtro-data").value;
+
+      const filtrado = extrato.filter(item => {
+        const autorMatch = !autor || (item.autor && item.autor.toLowerCase().includes(autor));
+        const tipoMatch = !tipo || item.tipo === tipo;
+        const dataMatch = !data || item.data.startsWith(data.split('-').reverse().join('/'));
+        return autorMatch && tipoMatch && dataMatch;
+      });
+
+      exibirTabela(filtrado);
+    }
+
+    function exportarCSV() {
+      let csv = "data;tipo;descrição;valor;responsável\n";
+      extrato.forEach(item => {
+        const data = item.data || "";
+        const tipo = item.tipo || "";
+        const descricao = (item.descricao || "").replace(/"/g, '""');
+        const valor = parseFloat(item.valor || 0).toFixed(2).replace(".", ",");
+        const autor = (item.autor || "").replace(/"/g, '""');
+        csv += `"${data}";"${tipo}";"${descricao}";"${valor}";"${autor}"\n`;
+      });
+
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const link = document.createElement("a");
+      link.setAttribute("href", URL.createObjectURL(blob));
+      link.setAttribute("download", "extrato_banco_fac.csv");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    carregarExtrato();
+  </script>
+</body>
+</html>

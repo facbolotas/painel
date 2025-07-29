@@ -308,7 +308,7 @@
     function atualizarExtrato() {
       const box = document.getElementById('extrato-lista');
       box.innerHTML = '';
-      extrato.slice(0, 8).forEach(m => {
+      extrato.slice(0, 10).forEach(m => {
         const div = document.createElement('div');
         div.className = 'extrato-item';
         const itensStr = m.itens ? m.itens.map(i => `${i.item} (x${i.quantidade})`).join(', ') : m.item || '-';
@@ -332,7 +332,7 @@
       "Algema": { parceria: 2000, semParceria: 3000 },
       "Capuz": { parceria: 2000, semParceria: 3000 },
       "C4": { parceria: 2000, semParceria: 2500 },
-      "Colete": { parceria: 3000, semParceria: 3000 },
+      "Colete": { parceria: 3000, semParceria: 4000 },
       "Álcool": { parceria: 500, semParceria: 700 },
       "Pente Estendido PT": { parceria: 1000, semParceria: 1200 },
       "Pente Estendido SMG": { parceria: 1000, semParceria: 1200 },
@@ -343,19 +343,19 @@
       "Mira": { parceria: 1000, semParceria: 1200 },
       "Lanterna": { parceria: 1000, semParceria: 1200 },
       "Cabo": { parceria: 1000, semParceria: 1200 },
-      "Silenciador": { parceria: 1000, semParceria: 2000 },
+      "Silenciador": { parceria: 1000, semParceria: 1200 },
       "Caixa de Attachs": { parceria: 5000, semParceria: 6000 },
       "Cartão Comum": { parceria: 30000, semParceria: 35000 },
-      "Cartão Incomum": { parceria: 35000, semParceria: 40000 },
+      "Cartão Incomum": { parceria: 20000, semParceria: 25000 },
       "Cartão Épico": { parceria: 40000, semParceria: 45000 },
-      "Cartão Raro": { parceria: 50000, semParceria: 60000 },
-      "Cartão Lendário": { parceria: 70000, semParceria: 80000 },
-      "Caixa Colete": { parceria: 35000, semParceria: 40000 },
+      "Cartão Raro": { parceria: 5000, semParceria: 6000 },
+      "Cartão Lendário": { parceria: 50000, semParceria: 55000 },
+      "Caixa Colete": { parceria: 30000, semParceria: 40000 },
       "Caixa de C4": { parceria: 20000, semParceria: 25000 },
-      "Caixa de Algema": { parceria: 25000, semParceria: 30000 },
-      "Caixa Alcool": { parceria: 500, semParceria: 700 },
+      "Caixa de Algema": { parceria: 20000, semParceria: 30000 },
+      "Caixa Alcool": { parceria: 5000, semParceria: 7000 },
       "Pendrive Comum": { parceria: 10000, semParceria: 15000 },
-      "Pendrive Raro": { parceria: 20000, semParceria: 20000 },
+      "Pendrive Raro": { parceria: 20000, semParceria: 25000 },
       "Pendrive Épico": { parceria: 40000, semParceria: 45000 }
     };
 

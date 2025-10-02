@@ -1,772 +1,665 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Painel de Controle Financeiro</title>
+    <meta charset="UTF-8">
+    <title>Painel de Controle Financeiro</title>
         <link rel="icon" href="https://facbolotas.github.io/painel/controle/bolotas.ico" type="image/x-icon">
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: Arial, sans-serif; background: #1b1b1b; color: #1a1a1a; }
-    header {
-      position: fixed;
-      top: 10px;
-      right: 20px;
-      z-index: 999;
-    }
-    header h1 { font-size: 1.25rem; font-weight: 600; }
-    .container { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
-    .saldo-card {
-        background: linear-gradient(90deg, #c90000, #ffffff, #FF0000);
-      color: #272727; border-radius: 12px; padding: 2rem; text-align: center;
-      margin-bottom: 2rem;
-    }
-    .main {
-      display: grid;
-      grid-template-columns: 1fr 2fr;
-      gap: 2rem;
-      margin-bottom: 2rem;
-    }
-    .card {
-      background: #fff; border-radius: 12px; padding: 1.5rem;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    }
-    .form-group { margin-bottom: 1rem; }
-    .form-group label { display: block; margin-bottom: 0.25rem; font-size: 0.875rem; }
-    .form-group input, .form-group select {
-      width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 8px;
-    }
-    .btn-primary, .btn-secondary, .btn-tercerary {
-      padding: 0.75rem; border: none; border-radius: 8px; cursor: pointer;
-      font-weight: 600; font-size: 0.875rem; margin-bottom: 5px;
-    }
-      .btn-primary { background: #910101; color: #fff; width: 100%; }
-      .btn-secondary { background: #f63b3b; color: #fff; margin-left: 0.5rem; }
-      .btn-tercerary { background: #ff6a00; color: #fff; width: 100%; }
-    .btn-remove { background: #ef4444; color: #fff; width: auto; }
-    .extrato-lista { max-height: 300px; overflow-y: auto; margin-top: 1rem; }
-    .extrato-item {
-      border-bottom: 1px solid #d6d6d6;
-      padding: 0.5rem 0;
-      font-size: 0.85rem;
-      display: grid;
-      grid-template-columns: 0.8fr 1fr 1.2fr 0.8fr 1fr 1.5fr 1fr;
-      gap: 0.25rem;
-      text-align: center;
-      justify-items: center;
-    }
-    .extrato-item:last-child { border: none; }
-    .valor-negativo { color: #ef4444; }
-    .valor-positivo { color: #10b981; }
-    .filtros { display: flex; gap: 1rem; margin-bottom: 1rem; align-items: center; flex-wrap: wrap; }
-    #graficoVendas {
-      width: 100%;
-      height: 500px !important;
-      background: #fff;
-      border-radius: 8px;
-      padding: 1rem;
-    }
-    #usuario-logado { margin-bottom: 1rem; font-weight: bold; color: #ffffff; }
-    footer {
-      margin-top: -5px;
-      bottom: 5px;
-      width: 100%;
-      text-align: center;
-      color: #aaa;
-      font-size: 10px;
-    }
-    @media (max-width: 480px) {
-      .login-box {
-        width: 90%;
-        padding: 30px 20px;
-      }
-      .social-icons {
-        right: 10px;
-      }
-      footer {
-        font-size: 12px;
-      }
-    }
-    .btn-sair {
-    background: linear-gradient(to right, #e52d27, #b31217);
-      color: white;
-      padding: 10px 18px;
-      border: none;
-      border-radius: 8px;
-      font-weight: bold;
-      font-size: 14px;
-      cursor: pointer;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .btn-sair:hover {
-      transform: scale(1.05);
-      box-shadow: 0 6px 12px rgba(0,0,0,0.4);
-    }
-    .item-container { border: 1px solid #ccc; padding: 1rem; margin-bottom: 1rem; border-radius: 8px; }
-  </style>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: Arial, sans-serif; background: #1b1b1b; color: #1a1a1a; line-height: 1.6; }
+        /* HEADER & LOGOUT */
+        header { position: fixed; top: 10px; right: 20px; z-index: 999; }
+        .btn-sair { background: linear-gradient(to right, #2753e5, #122ab3); color: white; padding: 8px 16px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: transform 0.2s; font-size: 13px;}
+        .btn-sair:hover { transform: scale(1.05); }
+        .container { max-width: 1200px; margin: 1rem auto; padding: 0 0.5rem; }                
+        /* SALDO CARD */
+        .saldo-card { background: linear-gradient(90deg, #ff0000, #ffffff, #f50000); color: #272727; border-radius: 12px; padding: 1rem; margin-bottom: 1rem; text-align: center; }
+        .saldo-card div:first-child { font-size: 0.8rem; }
+        .saldo-card #saldo { font-size: 1.5rem; font-weight: bold; }
+        /* MAIN LAYOUT */
+        .main { display: grid; grid-template-columns: 1.5fr 2fr; gap: 1rem; margin-bottom: 1rem; }
+        .card { background: #fff; border-radius: 12px; padding: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .card h2 { margin-bottom: 0.5rem; font-size: 1rem; text-align: center; }
+        /* EXTRATO */
+        .extrato-container { display: flex; flex-direction: column; height: auto; }
+        .extrato-lista { overflow-y: auto; margin-top: 0.5rem; flex-grow: 1; }
+        .extrato-item { border-bottom: 1px solid #d6d6d6; padding: 0.2rem 0; font-size: 0.6rem; display: grid; grid-template-columns: 0.8fr 1fr 1.2fr 0.6fr 0.8fr 1fr 0.8fr; gap: 0.1rem; text-align: center; justify-items: center; }
+        .extrato-item:last-child { border: none; }
+        .valor-negativo { color: #ef4444; }
+        .valor-positivo { color: #10b981; }
+        .extrato-header { font-weight: bold; border-bottom: 2px solid #ccc; padding-bottom: 2px; font-size: 0.7rem; }
+        .extrato-btn-group { margin-top: 0.5rem; display: flex; justify-content: flex-end; }
+        .extrato-btn-group button { margin-left: 0.3rem; padding: 0.3rem; font-size: 0.7rem; }
+        .btn-secondary { background: #3b48f6; color: #fff; margin-left: 0.5rem; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.75rem; }
+        /* CUSTOM STYLES FOR CALCULATOR INTEGRATION */
+        .calculator-container {
+            background-color: #333;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: none;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .display-container {
+            background-color: #222;
+            border-radius: 10px;
+            padding: 10px;
+            border: 3px solid #111;
+            overflow: hidden; /* Garante que o conteúdo não vaze */
+        }
+        .display {
+            background-color: #a3c9a3;
+            color: #111;
+            font-size: 1em;
+            padding: 8px;
+            border-radius: 5px;
+            min-height: 2.5em; /* Aumentado para evitar corte */
+            text-align: right;
+            overflow-x: auto; /* Rolagem horizontal se necessário */
+            white-space: nowrap;
+            font-weight: bold;
+            border: none;
+            width: 100%; /* Garante que ocupe toda a largura disponível */
+            box-sizing: border-box; /* Inclui padding na largura total */
+        }
+        #calculation-summary {
+            margin-top: 10px;
+            font-size: 0.7em;
+            color: #111;
+            min-height: 2em; /* Aumentado para evitar corte */
+            text-align: left;
+            white-space: normal;
+            background-color: #a3c9a3;
+            height: auto;
+            padding: 8px;
+            border-radius: 5px;
+            font-weight: normal;
+            white-space: pre-wrap;
+            overflow-y: auto; /* Rolagem vertical se necessário */
+            max-height: 100px; /* Limita a altura máxima */
+        }
+        #total-display {
+            font-size: 1.4em;
+            margin-top: 5px;
+            background-color: #c0ffc0;
+            width: 100%; /* Garante que ocupe toda a largura */
+        }
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 0 5px;
+        }
+        .partnership-control {
+            display: flex;
+            align-items: center;
+            color: white;
+            gap: 5px;
+            font-size: 0.9em;
+        }
+        #reset-button {
+            background-color: #cc0000;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.2s, transform 0.1s, box-shadow 0.2s;
+            box-shadow: 0 4px #990000;
+            position: relative;
+        }
+        #reset-button:hover {
+            background-color: #ff3333;
+        }
+        #reset-button:active {
+            background-color: #990000;
+            transform: translateY(4px);
+            box-shadow: 0 0 #990000;
+        }
+        .buttons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+            gap: 5px;
+        }
+        .item-button {
+            background-color: #666;
+            color: white;
+            border: none;
+            padding: 5px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.1s, transform 0.05s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6em;
+            text-align: center;
+            position: relative;
+            min-height: 60px;
+        }
+        .item-button:hover {
+            background-color: #777;
+        }
+        .item-button:active {
+            transform: scale(0.98);
+        }
+        .item-button[data-count]:not([data-count="0"]) {
+            background-color: #555;
+        }
+        .item-icon {
+            font-size: 1.5em;
+            margin-bottom: 5px;
+        }
+        .item-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: #cc0000;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 5px;
+            font-size: 0.6em;
+            font-weight: bold;
+            min-width: 15px;
+            text-align: center;
+            display: none;
+        }
+        .item-button[data-count]:not([data-count="0"]) .item-count {
+            display: block;
+        }
+        @media (max-width: 400px) {
+            .calculator-container { padding: 10px; }
+            .buttons-grid { grid-template-columns: repeat(3, 1fr); }
+            .item-button { font-size: 0.6em; min-height: 60px; }
+            .item-icon { font-size: 1.2em; }
+            .display { font-size: 0.9em; min-height: 2em; }
+            #total-display { font-size: 1.2em; }
+            #calculation-summary { font-size: 0.7em; min-height: 1.5em; max-height: 80px; }
+        }
+        /* FORM FIELDS OUTSIDE CALCULATOR */
+        .form-group { margin-bottom: 0.5rem; }
+        .form-group label { display: block; margin-bottom: 0.25rem; font-size: 0.7rem; font-weight: bold; }
+        .form-group input { width: 100%; padding: 0.3rem; border: 1px solid #ccc; border-radius: 8px; font-size: 0.8rem; }
+        .btn-primary { background: #353535; color: #fff; padding: 0.4rem; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.75rem; width: 100%; }
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .main { grid-template-columns: 1fr; }
+            .extrato-container { height: auto; }
+            .extrato-item { font-size: 0.55rem; grid-template-columns: 1fr 1fr 1fr 0.5fr 0.8fr 0.8fr 0.8fr; }
+        }
+        /* FOOTER STYLES */
+        footer {
+            text-align: center;
+            padding: 1rem 0;
+            color: #ccc; /* Cor do texto para contraste */
+            font-size: 0.7rem;
+            margin-top: 1rem;
+        }
+    </style>
 </head>
 <body>
-  <header>
-    <button class="btn-sair" onclick="logout()">↩ Sair</button>
-  </header>
+    <header>
+        <button class="btn-sair" onclick="logout()">↩ Sair</button>
+    </header>
 
-  <div class="container">
-    <div style="text-align: center; margin-top: 1rem;">
-  <img src="https://i.ibb.co/Ps0zPY0g/bolotas.gif" width="140" height="110" alt="Descrição da imagem" style="border-radius: 12px;">
-    </div>
+    <div class="container">
+        <div style="text-align: center; margin-top: 1rem;">
+        <img src="https://i.ibb.co/Ps0zPY0g/bolotas.gif" width="140" height="110" alt="Descrição da imagem" style="border-radius: 12px;">
+        </div>
+        <div id="usuario-logado" style="text-align: center; margin-bottom: 1rem; font-weight: bold; color: #ffffff;">Usuário: Carregando...</div>
 
-    <div id="usuario-logado">Usuário: Carregando...</div>
-
-    <div class="saldo-card">
-      <div>SALDO TOTAL</div>
-      <div id="saldo" style="font-size: 2rem; font-weight: bold;">R$ 0</div>
-    </div>
-
-    <div class="main">
-      <div class="card">
-        <center><h2>Nova Transação</h2></center>
-        <div class="form-group">
-          <label>Tipo de Venda:</label>
-          <select id="tipo-venda" onchange="atualizarTodosValores()">
-            <option value="parceria">Parceria</option>
-            <option value="semParceria">Sem Parceria</option>
-            <option value="Depósito">Depósito</option>
-            <option value="Saque">Saque</option>
-          </select>
+        <div class="saldo-card">
+            <div>SALDO TOTAL</div>
+            <div id="saldo">R$ 0</div>
         </div>
 
-        <div id="itens-lista">
-          <div class="item-container" data-index="0">
-            <div class="form-group">
-              <label>Item:</label>
-              <select class="item-transacao" onchange="atualizarValorCalculado(0)">
-                <option value="" disabled selected>Selecione o item</option>
-                <option value="Depósito">Depósito</option>
-                <option value="Saque">Saque</option>
-                <option value="Algema">Algema</option>
-                <option value="Capuz">Capuz</option>
-                <option value="C4">C4</option>
-                <option value="Colete">Colete</option>
-                <option value="Álcool">Álcool</option>
-                <option value="Pente Estendido PT">Pente Estendido PT</option>
-                <option value="Pente Estendido SMG">Pente Estendido SMG</option>
-                <option value="Pente Estendido Rifle">Pente Estendido Rifle</option>
-                <option value="Cano Pesado">Cano Pesado</option>
-                <option value="Compensador Tático">Compensador Tático</option>
-                <option value="Compensador Pesado">Compensador Pesado</option>
-                <option value="Mira">Mira</option>
-                <option value="Lanterna">Lanterna</option>
-                <option value="Cabo">Cabo</option>
-                <option value="Silenciador">Silenciador</option>
-                <option value="Caixa de Attachs">Caixa de Attachs</option>
-                <option value="Cartão Comum">Cartão Comum</option>
-                <option value="Cartão Incomum">Cartão Incomum</option>
-                <option value="Cartão Épico">Cartão Épico</option>
-                <option value="Cartão Raro">Cartão Raro</option>
-                <option value="Cartão Lendário">Cartão Lendário</option>
-                <option value="Caixa Colete">Caixa Colete</option>
-                <option value="Caixa de C4">Caixa de C4</option>
-                <option value="Caixa de Algema">Caixa de Algema</option>
-                <option value="Caixa Alcool">Caixa Alcool</option>
-                <option value="Pendrive Comum">Pendrive Comum</option>
-                <option value="Pendrive Raro">Pendrive Raro</option>
-                <option value="Pendrive Épico">Pendrive Épico</option>
-              </select>
+        <div class="main">
+            <div class="card">
+                <div class="calculator-container">
+                    <div class="display-container">
+                        <input type="text" class="display" id="total-display" readonly value="0">
+                    </div>
+                    <div class="controls">
+                        <div class="partnership-control">
+                            <input type="checkbox" id="partnership-checkbox">
+                            <label for="partnership-checkbox">Com Parceria?</label>
+                        </div>
+                        <button id="reset-button">Resetar</button>
+                    </div>
+                    <div class="buttons-grid" id="item-buttons-container"></div>
+                    <div class="display-container">
+                        <div id="calculation-summary">Nenhum item selecionado.</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Facção/Descrição:</label>
+                    <input type="text" id="descricao" placeholder="Nome da facção/Descrição">
+                </div>
+                <button class="btn-primary" onclick="confirmarMovimentacao()">✅ Adicionar Transação</button>
             </div>
-            <div class="form-group">
-              <label>Quantidade:</label>
-              <input type="number" class="quantidade" placeholder="Digite a quantidade" oninput="atualizarValorCalculado(0)">
-            </div>
-            <div class="form-group">
-              <label>Valor Total:</label>
-              <input type="text" class="valor" placeholder="Valor automatizado" readonly>
-            </div>
-            <button class="btn-remove" onclick="removerItem(0)">Remover Item</button>
-          </div>
-        </div>
-        <button class="btn-secondary" onclick="adicionarItem()">+ Adicionar Item</button>
-        <div class="form-group">
-          <label>Valor Total da Transação:</label>
-          <input type="text" id="valor-total-transacao" placeholder="Total calculado" readonly>
-        </div>
-        <div class="form-group">
-          <label>Facção/Descrição:</label>
-          <input type="text" id="descricao" placeholder="Nome da facção/Descrição">
-        </div>
-        <button class="btn-primary" onclick="confirmarMovimentacao()">Adicionar Transação</button>
-      </div>
 
-      <div class="card">
-        <h2>Extrato</h2>
-        <div class="extrato-item" style="font-weight: bold; border-bottom: 2px solid #ccc;">
-          <center><div>Tipo</div></center>
-          <center><div>Itens</div></center>
-          <center><div>Facção/Descrição</div></center>
-          <center><div>Quantidade</div></center>
-          <center><div>Usuário</div></center>
-          <center><div>Data</div></center>
-          <center><div>Valor</div></center>
+            <div class="card">
+                <h2>Extrato Recente</h2>
+                <div class="extrato-container">
+                    <div class="extrato-item extrato-header">
+                        <div>Tipo</div><div>Item</div><div>Descrição</div><div>Qtd.</div><div>Usuário</div><div>Data</div><div>Valor</div>
+                    </div>
+                    <div class="extrato-lista" id="extrato-lista"></div>
+                </div>
+                <div class="extrato-btn-group">
+                    <button class="btn-secondary" onclick="limparHistorico()">🗑 Limpar Extrato</button>
+                    <button class="btn-secondary" onclick="location.href='relatorio.html'">📄 Relatório</button>
+                </div>
+            </div>
         </div>
-        <div class="extrato-lista" id="extrato-lista"></div>
-        <div style="margin-top: 1rem; display: flex; justify-content: flex-end;">
-          <button class="btn-secondary" onclick="limparHistorico()">🗑 Limpar</button>
-          <button class="btn-secondary" onclick="location.href='relatorio.html'">📄 Ver Relatório</button>
-        </div>
-      </div>
     </div>
 
-    <div class="card">
-      <div class="filtros">
-        <input type="checkbox" id="filtro-venda" checked> <label for="filtro-venda">Vendas</label>
-        <input type="checkbox" id="filtro-deposito" checked> <label for="filtro-deposito">Depósitos</label>
-        <input type="checkbox" id="filtro-saque" checked> <label for="filtro-saque">Saques</label>
-        <input type="date" id="dataInicio">
-        <input type="date" id="dataFim">
-        <button class="btn-secondary" onclick="gerarGrafico()">🗓 Filtrar Gráfico</button>
-      </div>
-      <canvas id="graficoVendas"></canvas>
-      <div id="total-filtrado"></div>
-    </div>
-  </div>
-  <footer>
-    Desenvolvido by GomesCN
-  </footer>
-  <script>
+    <footer>
+        Desenvolvido by GomesCN
+    </footer>
+
+    <script>
     const firebaseConfig = {
       apiKey: "AIzaSyD-EfRfiAbc3I7cxDOP3g3bdRivoVz3qBE",
       authDomain: "bolotas-7ef79.firebaseapp.com",
       databaseURL: "https://bolotas-7ef79-default-rtdb.firebaseio.com/",
       projectId: "bolotas-7ef79"
     };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+        let saldo = 0, extrato = [];
+        let usuarioLogado = null;
 
-    // Inicializar Firebase com tratamento de erro
-    let db;
-    try {
-      firebase.initializeApp(firebaseConfig);
-      db = firebase.database();
-    } catch (error) {
-      console.error('Erro ao inicializar Firebase:', error);
-      alert('Erro ao conectar com o banco de dados. Verifique a configuração.');
-    }
+        let contagemItens = {};
+        const precosItens = {
+            "Algema": { parceria: 2000, semParceria: 3000 }, "Capuz": { parceria: 2000, semParceria: 3000 },
+            "C4": { parceria: 2000, semParceria: 2500 }, "Colete": { parceria: 3000, semParceria: 3000 },
+            "Álcool": { parceria: 500, semParceria: 700 }, "Pente Estendido PT": { parceria: 1000, semParceria: 1200 },
+            "Pente Estendido SMG": { parceria: 1000, semParceria: 1200 }, "Pente Estendido Rifle": { parceria: 1000, semParceria: 1200 },
+            "Cano Pesado": { parceria: 1000, semParceria: 1200 }, "Compensador Tático": { parceria: 1000, semParceria: 1200 },
+            "Compensador Pesado": { parceria: 1000, semParceria: 1200 }, "Mira": { parceria: 1000, semParceria: 1200 },
+            "Lanterna": { parceria: 1000, semParceria: 1200 }, "Cabo": { parceria: 1000, semParceria: 1200 },
+            "Silenciador": { parceria: 1000, semParceria: 2000 }, "Caixa de Attachs": { parceria: 5000, semParceria: 6000 },
+            "Cartão Comum": { parceria: 30000, semParceria: 35000 }, "Cartão Incomum": { parceria: 35000, semParceria: 40000 },
+            "Cartão Épico": { parceria: 40000, semParceria: 45000 }, "Cartão Raro": { parceria: 50000, semParceria: 60000 },
+            "Cartão Lendário": { parceria: 70000, semParceria: 80000 }, "Caixa Colete": { parceria: 35000, semParceria: 40000 },
+            "Caixa de C4": { parceria: 20000, semParceria: 25000 }, "Caixa de Algema": { parceria: 25000, semParceria: 30000 },
+            "Caixa Alcool": { parceria: 500, semParceria: 700 }, "Pendrive Comum": { parceria: 10000, semParceria: 15000 },
+            "Pendrive Raro": { parceria: 20000, semParceria: 20000 }, "Pendrive Épico": { parceria: 40000, semParceria: 45000 }
+        };
+        const iconMap = {
+            "Algema": { icon: "⛓️", label: "Algema" }, "Capuz": { icon: "🧑", label: "Capuz" },
+            "C4": { icon: "💣", label: "C4" }, "Colete": { icon: "🛡️", label: "Colete" },
+            "Álcool": { icon: "🧪", label: "Álcool" }, "Pente Estendido PT": { icon: "🔫", label: "Pente PT" },
+            "Pente Estendido SMG": { icon: "🔫", label: "Pente SMG" }, "Pente Estendido Rifle": { icon: "🔫", label: "Pente Rifle" },
+            "Cano Pesado": { icon: "🔨", label: "Cano P." }, "Compensador Tático": { icon: "🎯", label: "Comp. T." },
+            "Compensador Pesado": { icon: "⚖️", label: "Comp. P." }, "Mira": { icon: "🔭", label: "Mira" },
+            "Lanterna": { icon: "💡", label: "Lanterna" }, "Cabo": { icon: "🪢", label: "Cabo" },
+            "Silenciador": { icon: "🤫", label: "Silenciador" }, "Caixa de Attachs": { icon: "📦", label: "Caixa Attachs" },
+            "Cartão Comum": { icon: "💳", label: "C. Comum" }, "Cartão Incomum": { icon: "💳", label: "C. Incomum" },
+            "Cartão Épico": { icon: "💳", label: "C. Épico" }, "Cartão Raro": { icon: "💳", label: "C. Raro" },
+            "Cartão Lendário": { icon: "💳", label: "C. Lendário" }, "Caixa Colete": { icon: "🛡️📦", label: "Caixa Colete" },
+            "Caixa de C4": { icon: "💣📦", label: "Caixa C4" }, "Caixa de Algema": { icon: "⛓️📦", label: "Caixa Algema" },
+            "Caixa Alcool": { icon: "🧪📦", label: "Caixa Álcool" }, "Pendrive Comum": { icon: "💾", label: "P. Comum" },
+            "Pendrive Raro": { icon: "💾", label: "P. Raro" }, "Pendrive Épico": { icon: "💾", label: "P. Épico" },
+            "Depósito": { icon: "💰", label: "Depósito" }, "Saque": { icon: "💸", label: "Saque" }
+        };
 
-    let saldo = 0, extrato = [];
-    let chart = null;
-    let usuarioLogado = null;
-    let itemIndex = 1;
-
-    // Monitorar estado de autenticação
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        usuarioLogado = user;
-        const nomeUsuario = user.displayName || user.email.split('@')[0] || 'Usuário Anônimo';
-        document.getElementById('usuario-logado').innerText = 'Usuário: ' + nomeUsuario;
-        carregarDados();
-      } else {
-        console.warn('Usuário não autenticado. Redirecionando para login.');
-        location.href = 'index.html';
-      }
-    }, error => {
-      console.error('Erro no onAuthStateChanged:', error);
-      alert('Erro ao verificar autenticação. Tente novamente.');
-    });
-
-    function carregarDados() {
-      if (!db) {
-        console.error('Banco de dados não inicializado.');
-        return;
-      }
-      db.ref('controleCaixa').once('value', snap => {
-        try {
-          const v = snap.val() || { saldo: 0, extrato: [] };
-          saldo = Number(v.saldo) || 0;
-          extrato = Array.isArray(v.extrato) ? v.extrato : [];
-          atualizarSaldo();
-          atualizarExtrato();
-          gerarGrafico();
-        } catch (error) {
-          console.error('Erro ao carregar dados:', error);
-          alert('Erro ao carregar dados do servidor.');
-        }
-      }, error => {
-        console.error('Erro ao acessar controleCaixa:', error);
-        alert('Erro ao conectar com o banco de dados.');
-      });
-    }
-
-    function formatar(n) {
-      return Number(n).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-    }
-
-    function atualizarSaldo() {
-      document.getElementById('saldo').innerText = formatar(saldo);
-    }
-
-    function atualizarExtrato() {
-      const box = document.getElementById('extrato-lista');
-      box.innerHTML = '';
-      extrato.slice(0, 10).forEach(m => {
-        const div = document.createElement('div');
-        div.className = 'extrato-item';
-        const itensStr = m.itens ? m.itens.map(i => `${i.item} (x${i.quantidade})`).join(', ') : m.item || '-';
-        const quantidadeStr = m.itens ? m.itens.reduce((sum, i) => sum + Number(i.quantidade), 0) : m.quantidade || '-';
-        div.innerHTML = `
-          <div>${m.tipo}</div>
-          <div>${itensStr}</div>
-          <div>${m.descricao}</div>
-          <div>${quantidadeStr}</div>
-          <div>${m.autor}</div>
-          <div>${m.data}</div>
-          <div class="${m.tipo === 'Saque' ? 'valor-negativo' : 'valor-positivo'}">
-            ${m.tipo === 'Saque' ? '-' : ''}${formatar(m.valor)}
-          </div>
-        `;
-        box.appendChild(div);
-      });
-    }
-
-    const precosItens = {
-      "Algema": { parceria: 2000, semParceria: 3000 },
-      "Capuz": { parceria: 2000, semParceria: 3000 },
-      "C4": { parceria: 2000, semParceria: 2500 },
-      "Colete": { parceria: 3000, semParceria: 4000 },
-      "Álcool": { parceria: 500, semParceria: 700 },
-      "Pente Estendido PT": { parceria: 1000, semParceria: 1200 },
-      "Pente Estendido SMG": { parceria: 1000, semParceria: 1200 },
-      "Pente Estendido Rifle": { parceria: 1000, semParceria: 1200 },
-      "Cano Pesado": { parceria: 1000, semParceria: 1200 },
-      "Compensador Tático": { parceria: 1000, semParceria: 1200 },
-      "Compensador Pesado": { parceria: 1000, semParceria: 1200 },
-      "Mira": { parceria: 1000, semParceria: 1200 },
-      "Lanterna": { parceria: 1000, semParceria: 1200 },
-      "Cabo": { parceria: 1000, semParceria: 1200 },
-      "Silenciador": { parceria: 1000, semParceria: 1200 },
-      "Caixa de Attachs": { parceria: 5000, semParceria: 6000 },
-      "Cartão Comum": { parceria: 30000, semParceria: 35000 },
-      "Cartão Incomum": { parceria: 20000, semParceria: 25000 },
-      "Cartão Épico": { parceria: 40000, semParceria: 45000 },
-      "Cartão Raro": { parceria: 5000, semParceria: 6000 },
-      "Cartão Lendário": { parceria: 50000, semParceria: 55000 },
-      "Caixa Colete": { parceria: 30000, semParceria: 40000 },
-      "Caixa de C4": { parceria: 20000, semParceria: 25000 },
-      "Caixa de Algema": { parceria: 20000, semParceria: 30000 },
-      "Caixa Alcool": { parceria: 5000, semParceria: 7000 },
-      "Pendrive Comum": { parceria: 10000, semParceria: 15000 },
-      "Pendrive Raro": { parceria: 20000, semParceria: 25000 },
-      "Pendrive Épico": { parceria: 40000, semParceria: 45000 }
-    };
-
-    function atualizarValorCalculado(index) {
-      const container = document.querySelector(`.item-container[data-index="${index}"]`);
-      const item = container.querySelector('.item-transacao').value;
-      const tipo = document.getElementById('tipo-venda').value;
-      const qtd = parseInt(container.querySelector('.quantidade').value) || 1;
-      const valorInput = container.querySelector('.valor');
-
-      if (tipo === 'Depósito' || tipo === 'Saque') {
-        valorInput.removeAttribute('readonly');
-        valorInput.value = '';
-        atualizarValorTotalTransacao();
-        return;
-      }
-
-      valorInput.setAttribute('readonly', true);
-      if (item && precosItens[item]) {
-        const precoUnitario = precosItens[item][tipo];
-        const total = precoUnitario * qtd;
-        valorInput.value = formatar(total);
-      } else {
-        valorInput.value = '';
-      }
-      atualizarValorTotalTransacao();
-    }
-
-    function atualizarTodosValores() {
-      const containers = document.querySelectorAll('.item-container');
-      containers.forEach((_, i) => atualizarValorCalculado(i));
-    }
-
-    function adicionarItem() {
-      const lista = document.getElementById('itens-lista');
-      const newItem = document.createElement('div');
-      newItem.className = 'item-container';
-      newItem.dataset.index = itemIndex;
-      newItem.innerHTML = `
-        <div class="form-group">
-          <label>Item:</label>
-          <select class="item-transacao" onchange="atualizarValorCalculado(${itemIndex})">
-            <option value="" disabled selected>Selecione o item</option>
-            <option value="Depósito">Depósito</option>
-            <option value="Saque">Saque</option>
-            <option value="Algema">Algema</option>
-            <option value="Capuz">Capuz</option>
-            <option value="C4">C4</option>
-            <option value="Colete">Colete</option>
-            <option value="Álcool">Álcool</option>
-            <option value="Pente Estendido PT">Pente Estendido PT</option>
-            <option value="Pente Estendido SMG">Pente Estendido SMG</option>
-            <option value="Pente Estendido Rifle">Pente Estendido Rifle</option>
-            <option value="Cano Pesado">Cano Pesado</option>
-            <option value="Compensador Tático">Compensador Tático</option>
-            <option value="Compensador Pesado">Compensador Pesado</option>
-            <option value="Mira">Mira</option>
-            <option value="Lanterna">Lanterna</option>
-            <option value="Cabo">Cabo</option>
-            <option value="Silenciador">Silenciador</option>
-            <option value="Caixa de Attachs">Caixa de Attachs</option>
-            <option value="Cartão Comum">Cartão Comum</option>
-            <option value="Cartão Incomum">Cartão Incomum</option>
-            <option value="Cartão Épico">Cartão Épico</option>
-            <option value="Cartão Raro">Cartão Raro</option>
-            <option value="Cartão Lendário">Cartão Lendário</option>
-            <option value="Caixa Colete">Caixa Colete</option>
-            <option value="Caixa de C4">Caixa de C4</option>
-            <option value="Caixa de Algema">Caixa de Algema</option>
-            <option value="Caixa Alcool">Caixa Alcool</option>
-            <option value="Pendrive Comum">Pendrive Comum</option>
-            <option value="Pendrive Raro">Pendrive Raro</option>
-            <option value="Pendrive Épico">Pendrive Épico</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Quantidade:</label>
-          <input type="number" class="quantidade" placeholder="Digite a quantidade" oninput="atualizarValorCalculado(${itemIndex})">
-        </div>
-        <div class="form-group">
-          <label>Valor Total:</label>
-          <input type="text" class="valor" placeholder="Valor automatizado" readonly>
-        </div>
-        <button class="btn-remove" onclick="removerItem(${itemIndex})">Remover Item</button>
-      `;
-      lista.appendChild(newItem);
-      itemIndex++;
-    }
-
-    function removerItem(index) {
-      const container = document.querySelector(`.item-container[data-index="${index}"]`);
-      if (document.querySelectorAll('.item-container').length > 1) {
-        container.remove();
-      }
-      atualizarValorTotalTransacao();
-    }
-
-    function atualizarValorTotalTransacao() {
-      const containers = document.querySelectorAll('.item-container');
-      let total = 0;
-      containers.forEach(container => {
-        const valorStr = container.querySelector('.valor').value;
-        if (valorStr) {
-          const valor = parseFloat(valorStr.replace('R$', '').replace(/\./g, '').replace(',', '.').trim());
-          if (!isNaN(valor)) total += valor;
-        }
-      });
-      document.getElementById('valor-total-transacao').value = formatar(total);
-    }
-
-    function confirmarMovimentacao() {
-      const tipoVenda = document.getElementById('tipo-venda').value;
-      const descricao = document.getElementById('descricao').value;
-      const containers = document.querySelectorAll('.item-container');
-      const itens = [];
-
-      let valorTotal = 0;
-      let totalQuantidade = 0;
-
-      for (const container of containers) {
-        const item = container.querySelector('.item-transacao').value;
-        const quantidade = parseInt(container.querySelector('.quantidade').value) || 1;
-        const valorStr = container.querySelector('.valor').value;
-        const valor = parseFloat(valorStr.replace('R$', '').replace(/\./g, '').replace(',', '.').trim());
-
-        if (!item) return alert("Selecione um item em todas as entradas.");
-        if (isNaN(valor) || valor <= 0) return alert("Valor inválido em um dos itens.");
-        if (tipoVenda !== 'Depósito' && tipoVenda !== 'Saque' && (isNaN(quantidade) || quantidade <= 0)) {
-          return alert("Quantidade inválida em um dos itens.");
+        function formatNumber(number) {
+            return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
         }
 
-        itens.push({ item, quantidade, valor });
-        valorTotal += valor;
-        totalQuantidade += quantidade;
-      }
+        function isManualMode() {
+            return ['Depósito', 'Saque'].some(item => contagemItens[item] > 0);
+        }
 
-      if (!usuarioLogado) return alert('Usuário não autenticado. Faça login novamente.');
-      if (itens.length === 0) return alert("Adicione pelo menos um item.");
-
-      const autor = usuarioLogado.displayName || usuarioLogado.email.split('@')[0];
-
-      if (tipoVenda === 'Saque') {
-        saldo -= valorTotal;
-      } else {
-        saldo += valorTotal;
-      }
-
-      extrato.unshift({
-        tipo: tipoVenda,
-        itens: tipoVenda !== 'Depósito' && tipoVenda !== 'Saque' ? itens : null,
-        item: tipoVenda === 'Depósito' || tipoVenda === 'Saque' ? itens[0].item : null,
-        quantidade: tipoVenda === 'Depósito' || tipoVenda === 'Saque' ? itens[0].quantidade : totalQuantidade,
-        descricao,
-        autor,
-        valor: valorTotal,
-        data: new Date().toLocaleString('pt-BR')
-      });
-
-      db.ref('controleCaixa').set({ saldo, extrato }).then(() => {
-        atualizarSaldo();
-        atualizarExtrato();
-        gerarGrafico();
-
-        document.getElementById('itens-lista').innerHTML = `
-          <div class="item-container" data-index="0">
-            <div class="form-group">
-              <label>Item:</label>
-              <select class="item-transacao" onchange="atualizarValorCalculado(0)">
-                <option value="" disabled selected>Selecione o item</option>
-                <option value="Depósito">Depósito</option>
-                <option value="Saque">Saque</option>
-                <option value="Algema">Algema</option>
-                <option value="Capuz">Capuz</option>
-                <option value="C4">C4</option>
-                <option value="Colete">Colete</option>
-                <option value="Álcool">Álcool</option>
-                <option value="Pente Estendido PT">Pente Estendido PT</option>
-                <option value="Pente Estendido SMG">Pente Estendido SMG</option>
-                <option value="Pente Estendido Rifle">Pente Estendido Rifle</option>
-                <option value="Cano Pesado">Cano Pesado</option>
-                <option value="Compensador Tático">Compensador Tático</option>
-                <option value="Compensador Pesado">Compensador Pesado</option>
-                <option value="Mira">Mira</option>
-                <option value="Lanterna">Lanterna</option>
-                <option value="Cabo">Cabo</option>
-                <option value="Silenciador">Silenciador</option>
-                <option value="Caixa de Attachs">Caixa de Attachs</option>
-                <option value="Cartão Comum">Cartão Comum</option>
-                <option value="Cartão Incomum">Cartão Incomum</option>
-                <option value="Cartão Épico">Cartão Épico</option>
-                <option value="Cartão Raro">Cartão Raro</option>
-                <option value="Cartão Lendário">Cartão Lendário</option>
-                <option value="Caixa Colete">Caixa Colete</option>
-                <option value="Caixa de C4">Caixa de C4</option>
-                <option value="Caixa de Algema">Caixa de Algema</option>
-                <option value="Caixa Alcool">Caixa Alcool</option>
-                <option value="Pendrive Comum">Pendrive Comum</option>
-                <option value="Pendrive Raro">Pendrive Raro</option>
-                <option value="Pendrive Épico">Pendrive Épico</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label>Quantidade:</label>
-              <input type="number" class="quantidade" placeholder="Digite a quantidade" oninput="atualizarValorCalculado(0)">
-            </div>
-            <div class="form-group">
-              <label>Valor Total:</label>
-              <input type="text" class="valor" placeholder="Valor automatizado" readonly>
-            </div>
-            <button class="btn-remove" onclick="removerItem(0)">Remover Item</button>
-          </div>
-        `;
-        itemIndex = 1;
-        document.getElementById('descricao').value = '';
-        document.getElementById('valor-total-transacao').value = '';
-      }).catch(error => {
-        console.error('Erro ao salvar transação:', error);
-        alert('Erro ao salvar transação. Tente novamente.');
-      });
-    }
-
-    function gerarGrafico() {
-      const di = document.getElementById('dataInicio').value;
-      const df = document.getElementById('dataFim').value;
-      const start = di ? new Date(di) : new Date(0);
-      const end = df ? new Date(df) : new Date();
-
-      const incluirVendas = document.getElementById('filtro-venda').checked;
-      const incluirDepositos = document.getElementById('filtro-deposito').checked;
-      const incluirSaques = document.getElementById('filtro-saque').checked;
-
-      const tiposSelecionados = [];
-      if (incluirVendas) {
-        tiposSelecionados.push('parceria', 'semParceria');
-      }
-      if (incluirDepositos) {
-        tiposSelecionados.push('Depósito');
-      }
-      if (incluirSaques) {
-        tiposSelecionados.push('Saque');
-      }
-
-      const map = {};
-      let totalFiltrado = 0;
-
-      extrato.filter(e => tiposSelecionados.includes(e.tipo)).forEach(e => {
-        const partesData = e.data.split(',')[0].split('/');
-        const d = new Date(`${partesData[2]}-${partesData[1]}-${partesData[0]}`);
-        if (d < start || d > end) return;
-
-        const key = e.data.split(',')[0];
-        let valor = e.tipo === 'Saque' ? -Number(e.valor) : Number(e.valor);
-        map[key] = (map[key] || 0) + valor;
-        totalFiltrado += valor;
-      });
-
-      const labels = Object.keys(map).sort((a, b) => {
-        const [da, ma, ya] = a.split('/').map(Number);
-        const [db, mb, yb] = b.split('/').map(Number);
-        return new Date(ya, ma - 1, da) - new Date(yb, mb - 1, db);
-      });
-
-      const data = labels.map(l => map[l] || 0);
-
-      if (chart) {
-        chart.destroy();
-        chart = null;
-      }
-
-      try {
-        chart = new Chart(document.getElementById('graficoVendas').getContext('2d'), {
-          type: 'bar',
-          data: {
-            labels,
-            datasets: [{
-              label: `Total por Dia (${tiposSelecionados.join(' + ')})`,
-              data,
-              backgroundColor: data.map(valor => valor >= 0 ? '#3b82f6' : '#ef4444')
-            }]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-              legend: { display: true },
-              tooltip: {
-                callbacks: {
-                  label: function(context) {
-                    return formatar(context.parsed.y);
-                  }
-                }
-              }
-            },
-            scales: {
-              y: {
-                beginAtZero: true,
-                ticks: {
-                  callback: function(value) {
-                    return formatar(value);
-                  }
-                }
-              }
+        function updateCalculation() {
+            if (isManualMode()) {
+                return; // Manter o estado manual
             }
-          }
-        });
-      } catch (error) {
-        console.error('Erro ao gerar gráfico:', error);
-        alert('Erro ao renderizar o gráfico.');
-      }
 
-      document.getElementById('total-filtrado').innerText = `Total no Período: ${formatar(totalFiltrado)}`;
-    }
+            let total = 0;
+            let summaryHtml = "";
+            const isParceria = document.getElementById('partnership-checkbox').checked;
+            const precoKey = isParceria ? 'parceria' : 'semParceria';
+            
+            const itensSelecionados = Object.keys(contagemItens).filter(item => contagemItens[item] > 0 && precosItens[item]);
 
-    function logout() {
-      firebase.auth().signOut().then(() => {
-        location.href = 'index.html';
-      }).catch(error => {
-        console.error('Erro ao fazer logout:', error);
-        alert('Erro ao sair. Tente novamente.');
-      });
-    }
+            const totalInput = document.getElementById('total-display');
+            const calculationSummary = document.getElementById('calculation-summary');
 
-    function limparHistorico() {
-      if (extrato.length === 0) return alert('Nenhum extrato disponível.');
+            if (itensSelecionados.length === 0) {
+                totalInput.value = formatNumber(0);
+                calculationSummary.innerHTML = "Nenhum item selecionado.";
+                return;
+            }
 
-      const agora = new Date();
-      const inicioPeriodoUm = new Date(2025, 5, 1);
-      const inicioMesPassado = new Date(agora.getFullYear(), agora.getMonth() - 1, 1);
-      const fimMesPassado = new Date(agora.getFullYear(), agora.getMonth(), 0);
+            itensSelecionados.forEach(item => {
+                const count = contagemItens[item];
+                const precoUnitario = precosItens[item][precoKey];
+                const subTotal = count * precoUnitario;
+                total += subTotal;
 
-      let periodo = prompt(
-        `De qual período você deseja visualizar as transações para excluir?\n\n` +
-        `1 - De 01/06/2025 até ${agora.toLocaleDateString('pt-BR')}\n` +
-        `2 - Mês Passado (${inicioMesPassado.toLocaleDateString('pt-BR')} até ${fimMesPassado.toLocaleDateString('pt-BR')})`
-      );
-
-      let extratoFiltrado = [];
-
-      function parseDataFlexivel(dataString) {
-        if (!dataString) return null;
-        let data;
-        const partes = dataString.split(',')[0].split('/');
-        if (partes.length === 3 && partes[2].length === 4) {
-          data = new Date(`${partes[2]}-${partes[1]}-${partesData[0]}`);
-        } else if (!isNaN(Date.parse(dataString))) {
-          data = new Date(dataString);
-        } else {
-          return null;
+                const label = iconMap[item].label;
+                summaryHtml += `${count}x ${label} (${formatNumber(precoUnitario)} cada) = ${formatNumber(subTotal)}<br>`;
+            });
+            
+            totalInput.value = formatNumber(total);
+            calculationSummary.innerHTML = summaryHtml;
         }
-        return isNaN(data.getTime()) ? null : data;
-      }
 
-      if (periodo === '1') {
-        extratoFiltrado = extrato.filter(e => {
-          let dataTransacao = parseDataFlexivel(e.data);
-          return dataTransacao && dataTransacao >= inicioPeriodoUm && dataTransacao <= agora;
+        function handleManualTransaction(item) {
+            const isCurrentlySelected = contagemItens[item] > 0;
+            resetCalculation(true); // Limpa tudo, incluindo visual
+
+            if (isCurrentlySelected) {
+                return;
+            }
+
+            contagemItens[item] = 1;
+
+            const button = document.querySelector(`.item-button[data-item="${item}"]`);
+            if (button) {
+                button.setAttribute('data-count', 1);
+                button.querySelector('.item-count').textContent = 1;
+            }
+
+            const checkbox = document.getElementById('partnership-checkbox');
+            checkbox.disabled = true;
+            checkbox.checked = false;
+            document.querySelector('label[for="partnership-checkbox"]').textContent = `Transação: ${item}`;
+
+            const totalInput = document.getElementById('total-display');
+            totalInput.removeAttribute('readonly');
+            totalInput.value = '';
+            totalInput.placeholder = 'Digite o valor';
+
+            document.getElementById('calculation-summary').innerHTML = `Transação <b>${item}</b> selecionada. Digite o valor manualmente.`;
+        }
+
+        function createItemButtons() {
+            const container = document.getElementById('item-buttons-container');
+            Object.keys(iconMap).forEach(item => {
+                contagemItens[item] = 0;
+                const button = document.createElement('button');
+                button.className = 'item-button';
+                button.setAttribute('data-item', item);
+                button.setAttribute('data-count', 0);
+                const { icon, label } = iconMap[item];
+                button.innerHTML = `
+                    <span class="item-icon">${icon}</span>
+                    <span class="item-label">${label}</span>
+                    <span class="item-count">0</span>
+                `;
+                button.addEventListener('click', function() {
+                    if (['Depósito', 'Saque'].includes(item)) {
+                        handleManualTransaction(item);
+                    } else {
+                        if (isManualMode()) {
+                            resetCalculation();
+                        }
+                        contagemItens[item]++;
+                        const newCount = contagemItens[item];
+                        button.setAttribute('data-count', newCount);
+                        button.querySelector('.item-count').textContent = newCount;
+                        updateCalculation();
+                    }
+                });
+                container.appendChild(button);
+            });
+        }
+
+        function resetCalculation() {
+            Object.keys(contagemItens).forEach(item => {
+                contagemItens[item] = 0;
+                const button = document.querySelector(`.item-button[data-item="${item}"]`);
+                if (button) {
+                    button.setAttribute('data-count', 0);
+                    button.querySelector('.item-count').textContent = 0;
+                }
+            });
+
+            const checkbox = document.getElementById('partnership-checkbox');
+            checkbox.disabled = false;
+            checkbox.checked = false;
+            document.querySelector('label[for="partnership-checkbox"]').textContent = 'Com Parceria?';
+
+            const totalInput = document.getElementById('total-display');
+            totalInput.setAttribute('readonly', '');
+            totalInput.placeholder = '';
+            totalInput.value = '0';
+
+            updateCalculation();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            createItemButtons();
+            document.getElementById('partnership-checkbox').addEventListener('change', updateCalculation);
+            document.getElementById('reset-button').addEventListener('click', resetCalculation);
+            updateCalculation();
         });
-      } else if (periodo === '2') {
-        extratoFiltrado = extrato.filter(e => {
-          let dataTransacao = parseDataFlexivel(e.data);
-          return dataTransacao && dataTransacao >= inicioMesPassado && dataTransacao <= fimMesPassado;
+
+        firebase.auth().onAuthStateChanged(user => {
+            if (user) {
+                usuarioLogado = user;
+                const nomeUsuario = user.displayName ? user.displayName : user.email.split('@')[0];
+                document.getElementById('usuario-logado').innerText = 'Usuário: ' + nomeUsuario;
+                db.ref('controleCaixa').once('value', snap => {
+                    const v = snap.val() || { saldo: 0, extrato: [] };
+                    saldo = v.saldo;
+                    extrato = Array.isArray(v.extrato) ? v.extrato : [];
+                    atualizarSaldo();
+                    atualizarExtrato();
+                });
+            } else {
+                location.href = 'index.html';
+            }
         });
-      } else {
-        return alert('Período inválido ou cancelado.');
-      }
 
-      if (extratoFiltrado.length === 0) {
-        return alert('Nenhuma transação encontrada nesse período.');
-      }
+        function formatar(n) {
+            if (n === 0) return 'R$ 0,00';
+            const absN = Math.abs(n);
+            return absN.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        }
 
-      let lista = extratoFiltrado.map((item, idx) => {
-        const itensStr = item.itens ? item.itens.map(i => `${i.item} (x${i.quantidade})`).join(', ') : item.item || '-';
-        return `${idx + 1} – ${item.tipo} – ${itensStr} – ${item.descricao} – ${formatar(item.valor)} – ${item.autor} – ${item.data}`;
-      }).join('\n');
+        function atualizarSaldo() {
+            document.getElementById('saldo').innerText = formatar(saldo);
+        }
 
-      let escolha = prompt(`Escolha o número da transação que deseja excluir:\n\n${lista}`);
-      let indexEscolhido = parseInt(escolha) - 1;
+        function atualizarExtrato() {
+            const box = document.getElementById('extrato-lista');
+            box.innerHTML = '';
+            extrato.slice(0, 20).forEach(m => {
+                const div = document.createElement('div');
+                div.className = 'extrato-item';
+                const valorExibicao = formatar(m.valor);
+                const valorClass = (m.tipo === 'Saque') ? 'valor-negativo' : 'valor-positivo';
+                const tipoExtrato = (m.tipo === 'parceria' || m.tipo === 'semParceria') ? 'VENDA' : m.tipo.toUpperCase();
+                div.innerHTML = `
+                    <div>${tipoExtrato}</div>
+                    <div>${m.item || '-'}</div>
+                    <div>${m.descricao}</div>
+                    <div>${m.quantidade || '-'}</div>
+                    <div>${m.autor}</div>
+                    <div>${m.data.split(',')[0]}</div>
+                    <div class="${valorClass}">
+                        ${(m.tipo === 'Saque') ? '-' : ''}${valorExibicao}
+                    </div>
+                `;
+                box.appendChild(div);
+            });
+        }
 
-      if (isNaN(indexEscolhido) || indexEscolhido < 0 || indexEscolhido >= extratoFiltrado.length) {
-        return alert('Número inválido.');
-      }
+        async function confirmarMovimentacao() {
+            const descricao = document.getElementById('descricao').value;
+            if (!usuarioLogado) return alert('Usuário não autenticado.');
+            if (!descricao.trim()) return alert("Descrição/Facção é obrigatória.");
+            const itensSelecionados = Object.keys(contagemItens).filter(item => contagemItens[item] > 0);
+            if (itensSelecionados.length === 0) return alert("Selecione pelo menos um item para a transação.");
 
-      let itemSelecionado = extratoFiltrado[indexEscolhido];
+            const autor = usuarioLogado.displayName || usuarioLogado.email.split('@')[0];
+            const dataTransacao = new Date().toLocaleString('pt-BR');
+            const transacoesParaAdicionar = [];
+            let novoSaldo = saldo;
 
-      let senha = prompt('Digite a senha:');
-      if (senha !== 'tdc2024') return alert('Senha incorreta.');
+            if (isManualMode()) {
+                const item = itensSelecionados[0];
+                const totalInput = document.getElementById('total-display');
+                const valorStr = totalInput.value.trim();
+                const valor = parseFloat(valorStr.replace(/\./g, '').replace(',', '.'));
+                if (isNaN(valor) || valor <= 0) return alert(`Valor de ${item} inválido ou não preenchido.`);
 
-      let indexReal = extrato.findIndex(e =>
-        e.tipo === itemSelecionado.tipo &&
-        e.descricao === itemSelecionado.descricao &&
-        e.autor === itemSelecionado.autor &&
-        e.data === itemSelecionado.data &&
-        e.valor === itemSelecionado.valor
-      );
+                const valorAbsoluto = valor;
+                novoSaldo += (item === 'Saque' ? -valorAbsoluto : valorAbsoluto);
 
-      if (indexReal !== -1) {
-        saldo -= itemSelecionado.tipo === 'Saque' ? -itemSelecionado.valor : itemSelecionado.valor;
-        extrato.splice(indexReal, 1);
-        db.ref('controleCaixa').set({ saldo, extrato }).then(() => {
-          atualizarSaldo();
-          atualizarExtrato();
-          gerarGrafico();
-          alert('Transação excluída com sucesso.');
-        }).catch(error => {
-          console.error('Erro ao excluir transação:', error);
-          alert('Erro ao excluir transação. Tente novamente.');
-        });
-      } else {
-        alert('Não foi possível localizar a transação.');
-      }
-    }
-  </script>
+                transacoesParaAdicionar.push({
+                    tipo: item, item: item, quantidade: 1, descricao, autor, valor: valorAbsoluto,
+                    tipoVenda: item, data: dataTransacao
+                });
+            } else {
+                const isParceria = document.getElementById('partnership-checkbox').checked;
+                const tipoVenda = isParceria ? 'parceria' : 'semParceria';
+
+                let total = 0;
+                itensSelecionados.forEach(item => {
+                    const qtd = contagemItens[item];
+                    const precoUnitario = precosItens[item][tipoVenda];
+                    if (precoUnitario) {
+                        total += precoUnitario * qtd;
+                    }
+                });
+
+                let transactionItem = 'Venda';
+                let quantidade = '-';
+                if (itensSelecionados.length === 1) {
+                    transactionItem = itensSelecionados[0];
+                    quantidade = contagemItens[transactionItem];
+                } else {
+                    transactionItem = 'Múltiplos Itens';
+                    quantidade = itensSelecionados.reduce((sum, item) => sum + contagemItens[item], 0);
+                }
+
+                novoSaldo += total;
+
+                transacoesParaAdicionar.push({
+                    tipo: tipoVenda, item: transactionItem, quantidade, descricao, autor, valor: total,
+                    tipoVenda, data: dataTransacao
+                });
+            }
+
+            extrato.unshift(...transacoesParaAdicionar);
+            saldo = novoSaldo;
+
+            await db.ref('controleCaixa').set({ saldo, extrato });
+
+            atualizarSaldo();
+            atualizarExtrato();
+            resetCalculation();
+            document.getElementById('descricao').value = '';
+        }
+
+        function logout() {
+            firebase.auth().signOut().then(() => location.href = 'index.html');
+        }
+
+        function limparHistorico() {
+            if (extrato.length === 0) return alert('Nenhum extrato disponível.');
+
+            const agora = new Date();
+            const inicioPeriodoUm = new Date(2025, 5, 1);
+            const inicioMesPassado = new Date(agora.getFullYear(), agora.getMonth() - 1, 1);
+            const fimMesPassado = new Date(agora.getFullYear(), agora.getMonth(), 0);
+
+            let periodo = prompt(
+                `De qual período você deseja visualizar as transações para excluir?\n\n` +
+                `1 - De 01/06/2025 até ${agora.toLocaleDateString('pt-BR')}\n` +
+                `2 - Mês Passado (${inicioMesPassado.toLocaleDateString('pt-BR')} até ${fimMesPassado.toLocaleDateString('pt-BR')})`
+            );
+
+            let extratoFiltrado = [];
+
+            function parseDataFlexivel(dataString) {
+                if (!dataString) return null;
+                let data;
+                const partes = dataString.split(',')[0].split('/');
+                if (partes.length === 3 && partes[2].length === 4) {
+                    data = new Date(`${partes[2]}-${partes[1]}-${partes[0]}`);
+                } else if (!isNaN(Date.parse(dataString))) {
+                    data = new Date(dataString);
+                } else {
+                    return null;
+                }
+                return isNaN(data.getTime()) ? null : data;
+            }
+
+            if (periodo === '1') {
+                extratoFiltrado = extrato.filter(e => {
+                    let dataTransacao = parseDataFlexivel(e.data);
+                    return dataTransacao && dataTransacao >= inicioPeriodoUm && dataTransacao <= agora;
+                });
+            } else if (periodo === '2') {
+                extratoFiltrado = extrato.filter(e => {
+                    let dataTransacao = parseDataFlexivel(e.data);
+                    return dataTransacao && dataTransacao >= inicioMesPassado && dataTransacao <= fimMesPassado;
+                });
+            } else {
+                return alert('Período inválido ou cancelado.');
+            }
+
+            if (extratoFiltrado.length === 0) {
+                return alert('Nenhuma transação encontrada nesse período.');
+            }
+
+            let lista = extratoFiltrado.map((item, idx) => {
+                return `${idx + 1} – ${item.tipo} – ${item.descricao} – ${formatar(item.valor)} – ${item.autor} – ${item.data}`;
+            }).join('\n');
+
+            let escolha = prompt(`Escolha o número da transação que deseja excluir:\n\n${lista}`);
+            let indexEscolhido = parseInt(escolha) - 1;
+
+            if (isNaN(indexEscolhido) || indexEscolhido < 0 || indexEscolhido >= extratoFiltrado.length) {
+                return alert('Número inválido.');
+            }
+
+            let itemSelecionado = extratoFiltrado[indexEscolhido];
+
+            let senha = prompt('Digite a senha:');
+            if (senha !== 'tdc2024') return alert('Senha incorreta.');
+
+            let indexReal = extrato.findIndex(e =>
+                e.tipo === itemSelecionado.tipo &&
+                e.descricao === itemSelecionado.descricao &&
+                e.autor === itemSelecionado.autor &&
+                e.data === itemSelecionado.data &&
+                e.valor === itemSelecionado.valor
+            );
+
+            if (indexReal !== -1) {
+                let valorParaAjustar = itemSelecionado.valor;
+                if (itemSelecionado.tipo === 'Saque') {
+                    saldo += valorParaAjustar;
+                } else {
+                    saldo -= valorParaAjustar;
+                }
+                extrato.splice(indexReal, 1);
+                db.ref('controleCaixa').set({ saldo, extrato });
+                atualizarSaldo();
+                atualizarExtrato();
+                alert('Transação excluída com sucesso.');
+            } else {
+                alert('Não foi possível localizar a transação.');
+            }
+        }
+    </script>
 </body>
 </html>

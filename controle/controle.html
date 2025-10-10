@@ -1,11 +1,9 @@
-
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <title>Painel de Controle Financeiro</title>
-        <link rel="icon" href="https://facbolotas.github.io/painel/controle/bolotas.ico" type="image/x-icon">
+    <link rel="icon" href="https://facbolotas.github.io/painel/controle/bolotas.ico" type="image/x-icon">
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
@@ -52,7 +50,7 @@
             border-radius: 10px;
             padding: 10px;
             border: 3px solid #111;
-            overflow: hidden; /* Garante que o conteúdo não vaze */
+            overflow: hidden;
         }
         .display {
             background-color: #a3c9a3;
@@ -60,20 +58,20 @@
             font-size: 1em;
             padding: 8px;
             border-radius: 5px;
-            min-height: 2.5em; /* Aumentado para evitar corte */
+            min-height: 2.5em;
             text-align: right;
-            overflow-x: auto; /* Rolagem horizontal se necessário */
+            overflow-x: auto;
             white-space: nowrap;
             font-weight: bold;
             border: none;
-            width: 100%; /* Garante que ocupe toda a largura disponível */
-            box-sizing: border-box; /* Inclui padding na largura total */
+            width: 100%;
+            box-sizing: border-box;
         }
         #calculation-summary {
             margin-top: 10px;
             font-size: 0.7em;
             color: #111;
-            min-height: 2em; /* Aumentado para evitar corte */
+            min-height: 2em;
             text-align: left;
             white-space: normal;
             background-color: #a3c9a3;
@@ -82,14 +80,14 @@
             border-radius: 5px;
             font-weight: normal;
             white-space: pre-wrap;
-            overflow-y: auto; /* Rolagem vertical se necessário */
-            max-height: 100px; /* Limita a altura máxima */
+            overflow-y: auto;
+            max-height: 100px;
         }
         #total-display {
             font-size: 1.4em;
             margin-top: 5px;
             background-color: #c0ffc0;
-            width: 100%; /* Garante que ocupe toda a largura */
+            width: 100%;
         }
         .controls {
             display: flex;
@@ -157,9 +155,12 @@
         .item-button[data-count]:not([data-count="0"]) {
             background-color: #555;
         }
+        /* NOVO CSS PARA IMAGENS */
         .item-icon {
-            font-size: 1.5em;
+            width: 45px;
+            height: 45px;
             margin-bottom: 5px;
+            object-fit: contain;
         }
         .item-count {
             position: absolute;
@@ -182,7 +183,8 @@
             .calculator-container { padding: 10px; }
             .buttons-grid { grid-template-columns: repeat(3, 1fr); }
             .item-button { font-size: 0.6em; min-height: 60px; }
-            .item-icon { font-size: 1.2em; }
+            /* AJUSTE PARA IMAGENS EM TELA PEQUENA */
+            .item-icon { width: 20px; height: 20px; }
             .display { font-size: 0.9em; min-height: 2em; }
             #total-display { font-size: 1.2em; }
             #calculation-summary { font-size: 0.7em; min-height: 1.5em; max-height: 80px; }
@@ -202,7 +204,7 @@
         footer {
             text-align: center;
             padding: 1rem 0;
-            color: #ccc; /* Cor do texto para contraste */
+            color: #ccc;
             font-size: 0.7rem;
             margin-top: 1rem;
         }
@@ -293,17 +295,29 @@
             "Caixa Alcool": { parceria: 10000, semParceria: 13000 }, "Pendrive Comum": { parceria: 25000, semParceria: 30000 },
             "Pendrive Raro": { parceria: 35000, semParceria: 40000 }, "Pendrive Épico": { parceria: 55000, semParceria: 60000 }
         };
+
+        /* NOVO iconMap COM IMAGENS (SUBSTITUA OS LINKS PELOS SEUS!) */
         const iconMap = {
-            "Algema": { icon: "⛓️", label: "Algema" }, "Capuz": { icon: "🧑", label: "Capuz" },
-            "C4": { icon: "💣", label: "C4" }, "Colete": { icon: "🛡️", label: "Colete" },
-            "Álcool": { icon: "🧪", label: "Álcool" }, "Caixa de Attachs": { icon: "📦", label: "Caixa Attachs" },
-            "Cartão Comum": { icon: "💳", label: "C. Comum" }, "Cartão Incomum": { icon: "💳", label: "C. Incomum" },
-            "Cartão Épico": { icon: "💳", label: "C. Épico" }, "Cartão Raro": { icon: "💳", label: "C. Raro" },
-            "Cartão Lendário": { icon: "💳", label: "C. Lendário" }, "Caixa Colete": { icon: "🛡️📦", label: "Caixa Colete" },
-            "Caixa de C4": { icon: "💣📦", label: "Caixa C4" }, "Caixa de Algema": { icon: "⛓️📦", label: "Caixa Algema" },
-            "Caixa Alcool": { icon: "🧪📦", label: "Caixa Álcool" }, "Pendrive Comum": { icon: "💾", label: "P. Comum" },
-            "Pendrive Raro": { icon: "💾", label: "P. Raro" }, "Pendrive Épico": { icon: "💾", label: "P. Épico" },
-            "Depósito": { icon: "💰", label: "Depósito" }, "Saque": { icon: "💸", label: "Saque" }
+            "Algema": { icon: "https://i.ibb.co/Vcwc9MVX/ALGEMA.png", label: "Algema" },
+            "Capuz": { icon: "https://i.ibb.co/k2xYFzRW/CAPUZ.png", label: "Capuz" },
+            "C4": { icon: "https://i.ibb.co/hRf3kh7Y/C4.png", label: "C4" },
+            "Colete": { icon: "https://i.ibb.co/JjRVPG4V/COLETE.png", label: "Colete" },
+            "Álcool": { icon: "https://i.ibb.co/Y76CsX8m/ALCOOL.png", label: "Álcool" },
+            "Caixa de Attachs": { icon: "https://i.ibb.co/20q4ncVD/ATTACHS.png", label: "Caixa Attachs" },
+            "Cartão Comum": { icon: "https://i.ibb.co/v62fNYnd/COMUN.png", label: "C. Comum" },
+            "Cartão Incomum": { icon: "https://i.ibb.co/KpBZXdWt/INCOMUN.png", label: "C. Incomum" },
+            "Cartão Épico": { icon: "https://i.ibb.co/S70XkXf5/EPICO.png", label: "C. Épico" },
+            "Cartão Raro": { icon: "https://i.ibb.co/3mfJk9GT/RARO.png", label: "C. Raro" },
+            "Cartão Lendário": { icon: "https://i.ibb.co/bgmM35Pq/LENDARIO.png", label: "C. Lendário" },
+            "Caixa Colete": { icon: "https://i.ibb.co/27vnhd8m/CXCOLETE.png", label: "Caixa Colete" },
+            "Caixa de C4": { icon: "https://i.ibb.co/mrVBqvXm/CXC4.png", label: "Caixa C4" },
+            "Caixa de Algema": { icon: "https://i.ibb.co/Vf9Jcr4/CXALGEMA.png", label: "Caixa Algema" },
+            "Caixa Alcool": { icon: "https://i.ibb.co/S73VHpRh/CXALCOOL.png", label: "Caixa Álcool" },
+            "Pendrive Comum": { icon: "https://i.ibb.co/q3b6tD2h/PENDRIVE.png", label: "P. Comum" },
+            "Pendrive Raro": { icon: "https://i.ibb.co/q3b6tD2h/PENDRIVE.png", label: "P. Raro" },
+            "Pendrive Épico": { icon: "https://i.ibb.co/q3b6tD2h/PENDRIVE.png", label: "P. Épico" },
+            "Depósito": { icon: "https://em-content.zobj.net/source/google/439/money-bag_1f4b0.png", label: "Depósito" },
+            "Saque": { icon: "https://em-content.zobj.net/source/google/439/money-with-wings_1f4b8.png", label: "Saque" }
         };
 
         function formatNumber(number) {
@@ -316,7 +330,7 @@
 
         function updateCalculation() {
             if (isManualMode()) {
-                return; // Manter o estado manual
+                return;
             }
 
             let total = 0;
@@ -351,7 +365,7 @@
 
         function handleManualTransaction(item) {
             const isCurrentlySelected = contagemItens[item] > 0;
-            resetCalculation(true); // Limpa tudo, incluindo visual
+            resetCalculation(true);
 
             if (isCurrentlySelected) {
                 return;
@@ -378,6 +392,7 @@
             document.getElementById('calculation-summary').innerHTML = `Transação <b>${item}</b> selecionada. Digite o valor manualmente.`;
         }
 
+        /* FUNÇÃO ATUALIZADA PARA USAR IMAGENS */
         function createItemButtons() {
             const container = document.getElementById('item-buttons-container');
             Object.keys(iconMap).forEach(item => {
@@ -388,7 +403,7 @@
                 button.setAttribute('data-count', 0);
                 const { icon, label } = iconMap[item];
                 button.innerHTML = `
-                    <span class="item-icon">${icon}</span>
+                    <img class="item-icon" src="${icon}" alt="${label}" onerror="this.src='https://via.placeholder.com/24/CCCCCC/000000?text=?';">
                     <span class="item-label">${label}</span>
                     <span class="item-count">0</span>
                 `;
@@ -654,5 +669,3 @@
     </script>
 </body>
 </html>
-
-

@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -282,30 +283,20 @@
 
         let contagemItens = {};
         const precosItens = {
-            "Algema": { parceria: 2000, semParceria: 3000 }, "Capuz": { parceria: 2000, semParceria: 3000 },
-            "C4": { parceria: 2000, semParceria: 2500 }, "Colete": { parceria: 3000, semParceria: 4000 },
-            "Álcool": { parceria: 500, semParceria: 700 }, "Pente Estendido PT": { parceria: 1000, semParceria: 1200 },
-            "Pente Estendido SMG": { parceria: 1000, semParceria: 1200 }, "Pente Estendido Rifle": { parceria: 1000, semParceria: 1200 },
-            "Cano Pesado": { parceria: 1000, semParceria: 1200 }, "Compensador Tático": { parceria: 1000, semParceria: 1200 },
-            "Compensador Pesado": { parceria: 1000, semParceria: 1200 }, "Mira": { parceria: 1000, semParceria: 1200 },
-            "Lanterna": { parceria: 1000, semParceria: 1200 }, "Cabo": { parceria: 1000, semParceria: 1200 },
-            "Silenciador": { parceria: 1000, semParceria: 1200 }, "Caixa de Attachs": { parceria: 5000, semParceria: 6000 },
-            "Cartão Comum": { parceria: 30000, semParceria: 35000 }, "Cartão Incomum": { parceria: 20000, semParceria: 25000 },
-            "Cartão Épico": { parceria: 40000, semParceria: 45000 }, "Cartão Raro": { parceria: 5000, semParceria: 6000 },
-            "Cartão Lendário": { parceria: 50000, semParceria: 55000 }, "Caixa Colete": { parceria: 30000, semParceria: 40000 },
-            "Caixa de C4": { parceria: 20000, semParceria: 25000 }, "Caixa de Algema": { parceria: 20000, semParceria: 30000 },
-            "Caixa Alcool": { parceria: 5000, semParceria: 7000 }, "Pendrive Comum": { parceria: 10000, semParceria: 15000 },
-            "Pendrive Raro": { parceria: 20000, semParceria: 25000 }, "Pendrive Épico": { parceria: 40000, semParceria: 45000 }
+            "Algema": { parceria: 4000, semParceria: 5000 }, "Capuz": { parceria: 3000, semParceria: 4000 },
+            "C4": { parceria: 3000, semParceria: 3500 }, "Colete": { parceria: 6000, semParceria: 7000 },
+            "Álcool": { parceria: 1000, semParceria: 1300 }, "Caixa de Attachs": { parceria: 9000, semParceria: 12000 },
+            "Cartão Comum": { parceria: 25000, semParceria: 30000 }, "Cartão Incomum": { parceria: 30000, semParceria: 35000 },
+            "Cartão Épico": { parceria: 55000, semParceria: 60000 }, "Cartão Raro": { parceria: 40000, semParceria: 45000 },
+            "Cartão Lendário": { parceria: 70000, semParceria: 75000 }, "Caixa Colete": { parceria: 60000, semParceria: 70000 },
+            "Caixa de C4": { parceria: 30000, semParceria: 35000 }, "Caixa de Algema": { parceria: 40000, semParceria: 50000 },
+            "Caixa Alcool": { parceria: 10000, semParceria: 13000 }, "Pendrive Comum": { parceria: 25000, semParceria: 30000 },
+            "Pendrive Raro": { parceria: 35000, semParceria: 40000 }, "Pendrive Épico": { parceria: 55000, semParceria: 60000 }
         };
         const iconMap = {
             "Algema": { icon: "⛓️", label: "Algema" }, "Capuz": { icon: "🧑", label: "Capuz" },
             "C4": { icon: "💣", label: "C4" }, "Colete": { icon: "🛡️", label: "Colete" },
-            "Álcool": { icon: "🧪", label: "Álcool" }, "Pente Estendido PT": { icon: "🔫", label: "Pente PT" },
-            "Pente Estendido SMG": { icon: "🔫", label: "Pente SMG" }, "Pente Estendido Rifle": { icon: "🔫", label: "Pente Rifle" },
-            "Cano Pesado": { icon: "🔨", label: "Cano P." }, "Compensador Tático": { icon: "🎯", label: "Comp. T." },
-            "Compensador Pesado": { icon: "⚖️", label: "Comp. P." }, "Mira": { icon: "🔭", label: "Mira" },
-            "Lanterna": { icon: "💡", label: "Lanterna" }, "Cabo": { icon: "🪢", label: "Cabo" },
-            "Silenciador": { icon: "🤫", label: "Silenciador" }, "Caixa de Attachs": { icon: "📦", label: "Caixa Attachs" },
+            "Álcool": { icon: "🧪", label: "Álcool" }, "Caixa de Attachs": { icon: "📦", label: "Caixa Attachs" },
             "Cartão Comum": { icon: "💳", label: "C. Comum" }, "Cartão Incomum": { icon: "💳", label: "C. Incomum" },
             "Cartão Épico": { icon: "💳", label: "C. Épico" }, "Cartão Raro": { icon: "💳", label: "C. Raro" },
             "Cartão Lendário": { icon: "💳", label: "C. Lendário" }, "Caixa Colete": { icon: "🛡️📦", label: "Caixa Colete" },
